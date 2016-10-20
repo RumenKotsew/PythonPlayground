@@ -39,3 +39,23 @@
 # 	return newstr
 
 # print nan_expand(5)
+
+
+def prime_factorization(n):
+    box = n
+    arr = [0] * (n + 1)
+    counter = 0
+    arr2 = [0] * (n + 1)
+
+    for i in range(2, n):
+        if box % i > 0:
+            i = i + 1
+        while box % i == 0:
+            box = box / i
+            arr[i] = arr[i] + 1
+    for j in range(0, len(arr)):
+        if arr[j] != 0:
+            result = (str(j), str(arr[j])
+
+
+prime_factorization(1000)
