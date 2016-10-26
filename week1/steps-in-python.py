@@ -4,7 +4,7 @@
 #     while number > 0:
 #         result = result + number % 10
 #         number = number // 10
-    
+
 #     return result
 
 # print(sum_of_digits(82915))

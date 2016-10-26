@@ -30,7 +30,7 @@
 # print(sum_numbers([[1, 2, 3], [4, 5, 6], [7, 8, 9]]))
 
 # def nan_expand(times):
-# 	string = "NaN"
+#     string = "NaN"
 # 	newstr = string[:0] + "Not a " + string[0:]
 # 	while times > 0:
 # 		times = times - 1
@@ -41,21 +41,60 @@
 # print nan_expand(5)
 
 
-def prime_factorization(n):
-    box = n
-    arr = [0] * (n + 1)
-    counter = 0
-    arr2 = [0] * (n + 1)
+# def prime_factorization(n):
+#     box = n
+#     arr = [0] * (n + 1)
+#     counter = 0
+#     arr2 = [0] * (n + 1)
 
-    for i in range(2, n):
-        if box % i > 0:
-            i = i + 1
-        while box % i == 0:
-            box = box / i
-            arr[i] = arr[i] + 1
-    for j in range(0, len(arr)):
-        if arr[j] != 0:
-            result = (str(j), str(arr[j])
+#     for i in range(2, n):
+#         if box % i > 0:
+#             i = i + 1
+#         while box % i == 0:
+#             box = box / i
+#             arr[i] = arr[i] + 1
+#     for j in range(0, len(arr)):
+#         if arr[j] != 0:
+#             result = (str(j), str(arr[j]))
+#     return result
 
 
-prime_factorization(1000)
+# print prime_factorization(1000)
+
+# def group(arr):
+#     final_arr = []
+#     counter = 0
+
+#     for i in range(0, len(arr)):
+#         print("I: " + str(i))
+#         if i != (len(arr) - 1):
+#             if arr[i] != arr[i + 1]:
+#                 final_arr.append(arr[counter:(i + 1)])
+#                 counter = i + 1
+#                 print("Counter + " + str(counter))
+#         else:
+#             final_arr.append(arr[counter:len(arr)])
+#     return final_arr
+
+
+# print group([1, 1, 1, 2, 3, 1, 1, 5, 5, 5, 5, 5, 10, 7, 7, 8])
+
+# def max_consecutive(arr):
+#     counter = 0
+#     result = 0
+
+#     for i in range(0, len(arr)):
+#         if i != (len(arr) - 1):
+#             if arr[i] != arr[i + 1]:
+#                 if result < (i - counter):
+#                     result = (i - counter)
+#                 counter = i
+#         else:
+#             if result < (len(arr) - counter - 1):
+#                 result = (len(arr) - counter - 1)
+#     return result
+
+
+# print max_consecutive([1, 1, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5, 5])
+
+def word_counter(word, grid):
