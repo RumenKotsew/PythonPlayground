@@ -12,7 +12,7 @@ class Parser():
                             constant_index == 0:
                         constant_index += 1
                         input_list[constant_index:main_index] = \
-                            [''.join(input_list[constant_index:main_index])]
+                            [''.join(input_list[constant_index:main_index])]s
                         main_index = constant_index + 1
                         break
                 for times_index in range(main_index, len(input_list)):
