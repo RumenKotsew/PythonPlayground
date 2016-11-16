@@ -10,7 +10,7 @@ class LinkedList():
         return self.head.data
 
     def add_element(self, data):
-        self.add_at_index(self.size() - 1)
+        self.add_at_index(self.size() - 1, data)
 
     def index(self, index):
         current_node = self.head
@@ -24,7 +24,7 @@ class LinkedList():
             current_node = current_node.next
             self.index_recursive(current_node, counter, index)
         else:
-            return current_node.data  # done
+            return current_node.data
 
     def size(self):
         current_node = self.head
