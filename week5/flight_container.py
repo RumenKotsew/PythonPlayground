@@ -7,7 +7,7 @@ class FlightContainer():
         self.flights.append(self.flight_to_dict(new_flight))
 
     def is_full(self):
-        return self.get_size() < self.max_flights
+        return self.get_size() == self.max_flights
 
     def get_size(self):
         return len(self.flights)

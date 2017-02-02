@@ -10,11 +10,22 @@ class Flight():
         self.start_time = start_time
         self.end_time = end_time
 
-    def flight_duration():
-        pass
+    def flight_duration(self):
+        return self.end_time - self.start_time
 
-    def flight_empty_seats():
-        pass
+    def flight_empty_seats(self):
+        return self.max_passengers - self._get_passenger_count()
 
-    def passengers_under_18(flight):
-        pass
+    def _get_passenger_count(self):
+        res = 0
+        for item in self.passengers:
+            res += 1
+        return res
+
+    def passengers_under_18(self, flight):
+        res = 0
+        for k, v in self.passengers.items():
+            for inner_k, inner_v in v:
+                if inner_k == 'age' and inner_v < 18:
+                    res += 1
+        return res
