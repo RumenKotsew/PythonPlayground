@@ -1,46 +1,90 @@
-from unittest import TestCase, main
-from panda_graph import Node
+import unittest
+from panda_social_network import PandaSocialNetwork, Panda
 
 
-class NodeTest(TestCase):
+class PandaSocialNetworkTests(unittest.TestCase):
+
     def setUp(self):
-        self.name = 'Ivo'
-        self.email = 'ivo@pandamail.com'
-        self.gender = 'male'
-        self.panda = Node(self.name, self.email, self.gender)
+        self.panda_social_network = PandaSocialNetwork()
 
-    def test_get_name(self):
-        self.assertEqual(self.panda.get_name(), 'Ivo')
+    def test_panda_name_method_avoids_collision(self):
+        panda = Panda('name', 'test1@test.com', 'male')
+        self.assertEqual(panda.name(), 'name')
 
-    def test_get_email(self):
-        self.assertEqual(self.panda.get_email(), 'ivo@pandamail.com')
+    def test_get_pandas_return_1_panda_if_1_panda_is_added(self):
+        panda = Panda('testtest', 'testtest@test.com', 'male')
+        self.panda_social_network.add_panda(panda)
+        self.assertEqual(self.panda_social_network.get_pandas(), [panda])
 
-    def test_get_gender(self):
-        self.assertEqual(self.panda.get_gender(), 'male')
+    def test_make_friends_work_properly(self):
+        panda1 = Panda('testtest', 'testest@test.com', 'male')
+        panda2 = Panda('testtest2', 'testtest2@test.com', 'male')
+        self.assertEqual(0, len(self.panda_social_network.get_pandas()))
+        self.panda_social_network.make_friends(panda1, panda2)
+        self.assertEqual(2, len(self.panda_social_network.get_pandas()))
+        self.assertTrue(self.panda_social_network.are_friends(panda1, panda2))
+        self.assertTrue(self.panda_social_network.are_friends(panda2, panda1))
 
-    def test_is_male(self):
-        self.assertTrue(self.panda.is_male())
+    def test_connection_level_for_graph_with_4_pandas(self):
+        panda1 = Panda('name', 'test1@test.com', 'male')
+        panda2 = Panda('name', 'test2@test.com', 'male')
+        panda3 = Panda('name', 'test3@test.com', 'male')
+        panda4 = Panda('name', 'test4@test.com', 'male')
+        self.panda_social_network.make_friends(panda1, panda2)
+        self.panda_social_network.make_friends(panda2, panda3)
+        self.panda_social_network.make_friends(panda3, panda4)
 
-    def test_is_female(self):
-        self.assertFalse(self.panda.is_female())
+        level = self.panda_social_network. \
+            connection_level(panda1, panda4)
+        self.assertEqual(3, level)
+        # self.assertEqual([panda1, panda2, panda3, panda4], list(path))
 
-    def test_str(self):
-        self.assertEqual(self.panda.__str__(), 'Ivo, ivo@pandamail.com, male')
+    def test_connection_level_for_two_pandas_who_are_not_connected(self):
+        panda1 = Panda('name', 'test1@test.com', 'male')
+        panda2 = Panda('name', 'test2@test.com', 'male')
 
-    def test_eq(self):
-        new_panda = Node('Ivo', 'ivo@pandamail.com', 'male')
-        new_panda_2 = Node('Rado', 'radorado@rado.com', 'male')
-        new_panda_3 = Node('Rado', 'radorado@rado.com', 'male')
-        self.assertEqual(new_panda_2, new_panda_3)
-        self.assertTrue(self.panda.__eq__(new_panda))
-        self.assertFalse(self.panda.__eq__(new_panda_2))
+        self.panda_social_network.add_panda(panda1)
+        self.panda_social_network.add_panda(panda2)
 
-    def test_hash(self):
-        new_panda = Node('Ivo', 'ivo@pandamail.com', 'male')
-        new_panda_2 = Node('Rado', 'radorado@rado.com', 'male')
-        self.assertEqual(self.panda.__hash__(), new_panda.__hash__())
-        self.assertNotEqual(self.panda.__hash__(), new_panda_2.__hash__())
+        self.assertEqual(self.panda_social_network.
+                         connection_level(panda1, panda2), -1)
+
+    def test_friends_of_panda_with_two_friends(self):
+        panda1 = Panda('name', 'test1@test.com', 'male')
+        panda2 = Panda('name', 'test2@test.com', 'male')
+        panda3 = Panda('name', 'test3@test.com', 'male')
+
+        self.panda_social_network.make_friends(panda1, panda2)
+        self.panda_social_network.make_friends(panda1, panda3)
+
+        self.assertEqual(self.panda_social_network.friends_of(panda1),
+                         set([panda2, panda3]))
+
+    def test_are_connected_two_pandas_that_are(self):
+        panda1 = Panda('name', 'test1@test.com', 'male')
+        panda2 = Panda('name', 'test2@test.com', 'male')
+
+        self.panda_social_network.make_friends(panda1, panda2)
+        self.assertTrue(self.panda_social_network.
+                        are_connected(panda1, panda2))
+
+    def test_gender_when_level_is_0(self):
+        panda1 = Panda('name', 'test1@test.com', 'male')
+        panda2 = Panda('name', 'test2@test.com', 'male')
+        panda3 = Panda('name', 'test3@test.com', 'male')
+
+        self.panda_social_network.make_friends(panda1, panda2)
+        self.panda_social_network.make_friends(panda1, panda3)
+        self.assertEqual(self.panda_social_network.how_many_gender_in_network
+                         (1, panda1, 'male'), 2)
+
+    def test_friends_of_panda_with_0_friends(self):
+        panda1 = Panda('name', 'test1@test.com', 'male')
+        panda2 = Panda('name', 'test2@test.com', 'male')
+        self.panda_social_network.add_panda(panda1)
+        self.assertEqual(self.panda_social_network.friends_of(panda1),
+                         set())
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    unittest.main()

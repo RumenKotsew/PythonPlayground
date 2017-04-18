@@ -1,43 +1,50 @@
-from copy import deepcopy
+from functools import reduce
+
+
+ALIVE = 1
+DEAD = 0
 
 
 def strawberries(rows, columns, days, dead_strawberries):
-    matrix = []
-    count = 0
-    for i in range(0 ,rows):
-        matrix.append(deepcopy([0 for j in range(0 ,columns)]))
-    for coords in dead_strawberries:
-        matrix[coords[0]][coords[1]] = 'r'
-    while count != days:
-        count += 1
-        matrix = rot_new_matrix(matrix)
-    return matrix
+    if rows < 1 or rows > 1000:
+        raise ValueError()
+    if columns < 1:
+        raise ValueError()
+    if rows > columns:
+        raise ValueError()
+    matrix = [[ALIVE for i in range(columns)] for j in range(rows)]
 
-def rot_berries(i, j, matrix):
-    result = matrix
-    if i != 0:
-        result[i - 1][j] = 'r'
-    if i != len(matrix) - 1:
-        result[i + 1][j] = 'r'
-    if j != 0:
-        result[i][j - 1] = 'r'
-    if j != len(matrix[0]) - 1:
-        result[i][j + 1] = 'r'
-    return result
+    for strawberry in dead_strawberries:
+        matrix[strawberry[0]][strawberry[1]] = DEAD
 
-def rot_new_matrix(matrix):
-    count = 0
-    result = matrix
-    for i in range(0 , len(matrix)):
-        for j in range(0, len(matrix[i])):
-            if matrix[i][j] == 'r':
-                result = rot_berries(i, j, matrix)
-    return result
+    for day in range(days):
+        for item in dead_strawberries:
+            if check_neighbours((item[0] - 1, item[1]), (rows, columns)):
+                matrix[item[0] - 1][item[1]] = DEAD
+            if check_neighbours((item[0], item[1] - 1), (rows, columns)):
+                matrix[item[0]][item[1] - 1] = DEAD
+            if check_neighbours((item[0], item[1] + 1), (rows, columns)):
+                matrix[item[0]][item[1] + 1] = DEAD
+            if check_neighbours((item[0] + 1, item[1]), (rows, columns)):
+                matrix[item[0] + 1][item[1]] = DEAD
+        dead_strawberries = [(row, col) for row in range(rows)
+                             for col in range(columns)
+                             if matrix[row][col] == DEAD]
 
-def main():
-    result = strawberries(10, 10, 1, [[5, 5], [7, 7]])
-    for i in result:
-        print(i)
+    return sum(reduce(lambda x, y: x + y, matrix))
 
 
-main()
+def check_neighbours(index, length):
+    return bool(index[0] >= 0 and index[0] < length[0] and
+                index[1] >= 0 and index[1] < length[1])
+
+
+def has_dead_neighbours(index, length, matrix):
+    return bool(index[0] >= 0 and index[0] < length[0] and
+                index[1] >= 0 and index[1] < length[1]) and \
+        bool(index[0] >= 0 and index[0] < length[0] and
+             index[1] >= 0 and index[1] < length[1]) and \
+        bool(index[0] >= 0 and index[0] < length[0] and
+             index[1] >= 0 and index[1] < length[1]) and \
+        bool(index[0] >= 0 and index[0] < length[0] and
+             index[1] >= 0 and index[1] < length[1])
