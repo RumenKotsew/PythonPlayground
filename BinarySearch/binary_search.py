@@ -1,4 +1,4 @@
-def binary_search(array, element):
+def binary_search(array, a, b, element):
     start = 0
     end = len(array) - 1
     mid = end // 2
@@ -17,11 +17,12 @@ def binary_search_recursive(array, element, start, end, mid):
         return mid
 
 
-def main():
-    array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-    element = 12
-    print(binary_search(array, element))
+def find_turning_point(array, start, end):
+    if array == sorted(array, key=int):
+        return "Array is sorted."
+    else:
+        for i in range(len(array)):
+            if array[0:i] != sorted(array[0:i], key=int):
+                return "Turning point is " + str(array[i - 1]) + " on index " + str(i - 1) + "."
 
-
-if __name__ == '__main__':
-    main()
+    return "Turning point is " + str(array[len(array) -1]) + " on index " + str(len(array) - 1) + "."
