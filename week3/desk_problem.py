@@ -1,15 +1,20 @@
-class Bill():
+class Bill:
     def __init__(self, amount):
-        self.amount = amount
+        if type(amount) != int:
+            raise TypeError
+        elif amount < 0:
+            raise ValueError
+        else:
+            self.amount = amount
 
     def __str__(self):
-        return "{0}".format(self.amount)
+        return "A {0}$ bill".format(self.amount)
 
     def __repr__(self):
-        return str(self.amount)
+        return str(self)
 
     def __int__(self):
-        return int(self.amount)
+        return self.amount
 
     def __eq__(self, other):
         return self.amount == other.amount
@@ -18,67 +23,85 @@ class Bill():
         if bill.amount > 0:
             return hash(str(bill.amount))
         else:
-            return "valueError"
+            raise ValueError
 
 
-class BatchBill():
-    def __init__(self, list_of_bills):
-        self.list_of_bills = list_of_bills
+class BatchBill:
+    def __init__(self, *args):
+        self.bills = list()
+        if args[0]:
+            self.bills = args[0]
 
-    # def type_check():
-    #   if type(list_of_bills) is not type(list()):
-    #       return "wrong type"
-
-    # type_check()
+    def __getitem__(self, index):
+        if len(self.bills) > index:
+            return self.bills[index]
+        else:
+            raise IndexError
 
     def __len__(self):
-        index = 0
-        for bill in self.list_of_bills:
-            index += 1
-
-        return index
-
-    def __str__(self):
-        return str(self.list_of_bills)
+        return len(self.bills)
 
     def total(self):
-        total_sum = 0
-        for bill in self.list_of_bills:
-            total_sum += bill
-
-        return total_sum
-
-    def __iter__(self):
-        for x in self.list_of_bills:
-            yield x
+        res = 0
+        for bill in self.bills:
+            res += bill.amount
+        return res
 
 
-class CashDesk():
-    def __init__(self, batch_bills):
-        self.batch_bills = batch_bills
+class CashDesk:
+    def __init__(self):
+        self.bills = list()
+        self.bill_batches = list()
 
     def take_money(self, money):
-        if money in self.batch_bills:
-            self.batch_bills.remove(money)
+        if money.__class__.__name__ == 'Bill':
+            self.bills.append(money)
+        elif money.__class__.__name__ == 'BatchBill':
+            self.bill_batches.append(money)
 
     def total(self):
-        total_cash = 0
-        for cash_batches in self.batch_bills:
-            for cash in cash_batches:
-                total_cash += cash
-        return total_cash
+        res = 0
+        if len(self.bills) > 0:
+            for i in self.bills:
+                res += i.amount
+        if len(self.bill_batches) > 0:
+            for j in self.bill_batches:
+                res += j.total()
+        return res
 
     def inspect(self):
-        bills_histogram = dict()
-        for count in self.batch_bills:
-            if count in bills_histogram:
-                bills_histogram[count] += 1
+        result = ("We have a total of " + str(self.total()) + "$ in the desk")
+        print_list = list()
+        if len(self.bills) > 0:
+            for i in self.bills:
+                print_list.append(i.amount)
+        if len(self.bill_batches) > 0 and len(self.bills) > 0:
+            print_list = list()
+            self.bill_batches.append(self.bills)
+            for i in range(len(self.bill_batches)):
+                for bill in self.bill_batches[i]:
+                    print_list.append(bill.amount)
+
+        res_dict = {}
+        for i in print_list:
+            if i in res_dict:
+                res_dict[i] += 1
             else:
-                bills_histogram[count] = 1
-        return bills_histogram
+                res_dict[i] = 1
+        result += ("\nWe have the following count of bills, sorted in ascending order:")
+        my_dict_keys = list(res_dict.keys())
+        my_dict_keys.sort()
+        for key in my_dict_keys:
+            result += ("\n" + str(key) + "$ bills - " + str(res_dict[key]))
+        # for k, v in res_dict.items():
+            # result += (str(k) + "$ bills - " + str(v) + "\n")
+
+        return result
 
 
-batch_of_bills = BatchBill([10, 20, 50, 100, 100, 100])
-desk = CashDesk(batch_of_bills)
-
-print(desk.inspect())
+# desk = CashDesk()
+# desk.take_money(Bill(10))
+# desk.take_money(Bill(5))
+# desk.take_money(Bill(25))
+# desk.take_money(Bill(50))
+# desk.take_money(BatchBill([Bill(10), Bill(5)]))
