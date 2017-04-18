@@ -1,8 +1,6 @@
 def goldbach(n):
     if is_prime(n):
         return "Number is prime!"
-    else:
-        
 
 
 def is_prime(n):
