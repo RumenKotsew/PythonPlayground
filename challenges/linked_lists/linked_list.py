@@ -24,78 +24,85 @@ class LinkedList(object):
     def __len__(self):
         if self.head is None:
             return 0
-        counter = 0
-        current_node = self.head
-        while current_node.next is not None:
-            counter += 1
-            current_node = current_node.next
-        counter += 1
-        return counter
+        return self.iterate_list_for(list_len=True)
+
+    def validate_user_input(self, data):
+        if data is None:
+            raise TypeError('Input type cannot be None')
+        else:
+            return True
 
     def insert_to_front(self, data):
-        if data is None:
-            raise TypeError('Input type cannot be None')
-        if self.head is None:
-            self.head = Node(data)
-            return True
-        current_node = Node(self.head.data)
-        if self.head.next is not None:
-            current_node.next = self.head.next
-        self.head.data = data
-        self.head.next = current_node
+        if self.validate_user_input(data):
+            if self.head is None:
+                self.head = Node(data)
+            else:
+                current_node = Node(self.head.data)
+                if self.head.next is not None:
+                    current_node.next = self.head.next
+                self.head.data = data
+                self.head.next = current_node
 
     def append(self, data):
-        if data is None:
-            raise TypeError('Input type cannot be None')
-        elif self.head is None:
-            self.head = Node(data)
-        else:
-            current_node = self.head
-            while current_node.next is not None:
-                current_node = current_node.next
-            current_node.next = Node(data)
+        if self.validate_user_input(data):
+            if self.head is None:
+                self.head = Node(data)
+            else:
+                current_node = self.head
+                while current_node.next is not None:
+                    current_node = current_node.next
+                current_node.next = Node(data)
 
     def find(self, data):
-        if data is None:
+        if data is None or self.head is None:
             return None
-        if self.head is None:
-            return None
-        current_node = self.head
-        while current_node.next is not None:
-            if current_node.data == data:
-                return current_node
-            current_node = current_node.next
-        return None
+        return self.iterate_list_for(find=True, data=data)
 
     def delete(self, data):
         if data is None or self.head is None:
             return None
         if self.head.data == data:
             self.head = self.head.next
-        current_node = self.head
-        while current_node.next is not None:
-            if current_node.next.data == data:
-                current_node.next = current_node.next.next
-            current_node = current_node.next
+        self.iterate_list_for(delete=True, data=data)
 
     def print_list(self):
         if self.head is None:
-            print(None)
-        current_node = self.head
-        while current_node.next is not None:
-            print(current_node)
-            current_node = current_node.next
+            print('List is empty')
+        self.iterate_list_for(print_list=True)
 
     def get_all_data(self):
-        res = []
         if self.head is None:
-            return res
+            return []
         if self.head.next is None:
-            res.append(self.head.data)
-            return res
+            return [self.head.data]
+        return self.iterate_list_for(get_all_data=True)
+
+    def iterate_list_for(self, list_len=False, find=False, delete=False,
+                         print_list=False, get_all_data=False, data=None):
         current_node = self.head
+        res = []
+        counter = 0
         while current_node.next is not None:
-            res.append(current_node.data)
+            if list_len:
+                counter += 1
+            if find:
+                if current_node.data == data:
+                    return current_node
+            if delete:
+                if current_node.next.data == data:
+                    current_node.next = current_node.next.next
+                    break
+            if print_list:
+                print(current_node)
+            if get_all_data:
+                res.append(current_node.data)
             current_node = current_node.next
-        res.append(current_node.data)
-        return res
+
+        if find:
+            return None
+        if list_len:
+            counter += 1
+            return counter
+        if get_all_data:
+            res.append(current_node.data)
+            return res
