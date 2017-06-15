@@ -107,10 +107,10 @@ class TestLinkedList(object):
 
 def main():
     test = TestLinkedList()
-    # test.test_insert_to_front()
+    test.test_insert_to_front()
     test.test_append()
-    # test.test_find()
-    # test.test_delete()
+    test.test_find()
+    test.test_delete()
     test.test_len()
 
 
