@@ -1,4 +1,4 @@
-from nose.tools import assert_equal
+from nose.tools import assert_equal, assert_raises
 from linked_list import LinkedList, Node
 
 
@@ -11,7 +11,7 @@ class TestLinkedList(object):
         assert_equal(linked_list.get_all_data(), [10])
 
         print('Test: insert_to_front on a None')
-        linked_list.insert_to_front(None)
+        assert_raises(TypeError, linked_list.insert_to_front, None)
         assert_equal(linked_list.get_all_data(), [10])
 
         print('Test: insert_to_front general case')
@@ -28,7 +28,7 @@ class TestLinkedList(object):
         assert_equal(linked_list.get_all_data(), [10])
 
         print('Test: append a None')
-        linked_list.append(None)
+        assert_raises(TypeError, linked_list.append, None)
         assert_equal(linked_list.get_all_data(), [10])
 
         print('Test: append general case')

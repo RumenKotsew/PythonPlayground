@@ -34,7 +34,7 @@ class LinkedList(object):
 
     def insert_to_front(self, data):
         if data is None:
-            return False
+            raise TypeError('Input type cannot be None')
         if self.head is None:
             self.head = Node(data)
             return True
@@ -46,7 +46,7 @@ class LinkedList(object):
 
     def append(self, data):
         if data is None:
-            return False
+            raise TypeError('Input type cannot be None')
         elif self.head is None:
             self.head = Node(data)
         else:
